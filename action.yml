@@ -1,0 +1,23 @@
+name: '20Scoops-CNX-Vault'
+description: 'Export secret from vault server'
+branding:
+  icon: 'toggle-right'
+  color: 'red'
+inputs:
+  url:
+    description:
+      'vault server url path example: http://vault-server.com'
+    required: true
+  token:
+    description:
+      'vault token for verify and get secrets'
+    required: true
+  path:
+    description: 'vault secret path example: aws/secret'
+    required: true
+  module:
+    description: 'vault secret module aws, kv, ssh'
+    required: true
+runs:
+  using: 'node12'
+  main: 'dist/index.js'
