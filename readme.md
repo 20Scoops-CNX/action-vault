@@ -14,7 +14,7 @@ jobs:
     build:
         steps:
             - name: Import AWS access key
-              uses: 20Scoops-CNX/action-localizer@master
+              uses: 20Scoops-CNX/action-vault@master
               with:
                 url: ${{ secrets.VAULT_HOST }}
                 token: ${{ secrets.VAULT_TOKEN }}

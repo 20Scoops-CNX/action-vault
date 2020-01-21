@@ -1,5 +1,5 @@
 {
-  "name": "20scoops-action-vault",
+  "name": "action-vault",
   "version": "0.1.0",
   "description": "",
   "main": "src/index.js",
