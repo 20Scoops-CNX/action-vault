@@ -1,0 +1,18 @@
+# editor tools
+.idea
+
+# dependencies
+node_modules
+package-lock.json
+yarn-error.log
+
+# test
+coverage
+artifacts
+
+# development workflow 
+.bundle
+vendor
+
+# DS_STORE
+*/.DS_Store
