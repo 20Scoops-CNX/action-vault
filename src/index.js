@@ -10,12 +10,12 @@ const usageModule = core.getInput('MODULE');
 
 const modules = require('./modules');
 
-var options = {
+const options = {
   apiVersion: 'v1',
   endpoint: url,
   token: token
 };
 
-var vault = require('node-vault')(options);
+const vault = require('node-vault')(options);
 
 modules(vault, usageModule);

@@ -1,0 +1,25 @@
+name: Danger on pull request
+
+on: [pull_request]
+
+jobs:
+  danger:
+    runs-on: ubuntu-18.04
+    steps:
+      - uses: actions/checkout@v1
+      - name: Setup ruby
+        uses: actions/setup-ruby@v1
+        with:
+          ruby-version: '2.6'
+      - uses: actions/setup-node@v1
+      - name: Yarn install
+        run: yarn
+      - name: Install bundler
+        run: |
+          gem install bundler --user-install
+          bundle install --path vendor/bundle
+      - name: run danger
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          bundle exec danger

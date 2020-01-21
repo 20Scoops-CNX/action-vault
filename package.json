@@ -4,11 +4,32 @@
   "description": "",
   "main": "src/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "ncc build src/index.js",
+    "lint": "eslint . --fix",
+    "lint:check": "eslint . --color",
+    "prettier": "prettier --write '**/*.js'",
+    "prettier:check": "prettier --list-different '**/*.js'",
+    "check-vulnerabilities": "yarn retire --outputformat json --outputpath artifacts/result-vulnerabilities.json"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@actions/core": "^1.2.1",
     "node-vault": "^0.9.12"
+  },
+  "devDependencies": {
+    "@zeit/ncc": "^0.21.0",
+    "eslint": "^5.6.1",
+    "eslint-config-prettier": "^6.1.0",
+    "eslint-config-standard": "^12.0.0",
+    "eslint-plugin-dependencies": "^2.4.0",
+    "eslint-plugin-import": "^2.14.0",
+    "eslint-plugin-jest": "^22.16.0",
+    "eslint-plugin-node": "^9.2.0",
+    "eslint-plugin-promise": "^4.0.1",
+    "eslint-plugin-security": "^1.4.0",
+    "eslint-plugin-standard": "^4.0.1",
+    "prettier": "^1.19.1",
+    "retire": "^2.0.3"
   }
 }

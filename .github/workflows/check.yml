@@ -1,0 +1,24 @@
+  
+name: Check style code
+
+on:
+  push:
+    branches-ignore:
+      - master
+
+jobs:
+  check:
+    runs-on: ubuntu-18.04
+    steps:
+      - uses: actions/checkout@v1
+      - uses: actions/setup-node@v1
+      - name: Yarn install
+        run: yarn
+      - name: Check lint
+        run: yarn lint
+      - name: Check prettier
+        run: yarn prettier:check
+      - name: Check vulnerabilities
+        run: |
+          mkdir artifacts
+          yarn check-vulnerabilities
