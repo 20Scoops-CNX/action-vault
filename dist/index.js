@@ -37008,7 +37008,7 @@ const aws = __webpack_require__(33);
 module.exports = (vault, usageModule) => {
   switch (usageModule) {
     case 'aws':
-      aws.getAwsKey();
+      aws.getAwsKey(vault);
       break;
     case 'kv':
       core.warning('Feature is not available.');
