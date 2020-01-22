@@ -16,11 +16,11 @@ jobs:
             - name: Import AWS access key
               uses: 20Scoops-CNX/action-vault@master
               with:
-                url: ${{ secrets.VAULT_HOST }}
-                token: ${{ secrets.VAULT_TOKEN }}
-                path: 'example-aws/creds/ecr'
+                VAULT_HOST: ${{ secrets.VAULT_HOST }}
+                VAULT_TOKEN: ${{ secrets.VAULT_TOKEN }}
+                PATH: 'example-aws/creds/ecr'
                 # aws,kv,ssh
-                module: 'aws'
+                MODULE: 'aws'
               id: aws
             - name: Login to ECR
               id: ecr

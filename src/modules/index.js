@@ -1,10 +1,10 @@
 const core = require('@actions/core');
 const aws = require('./aws');
 
-module.exports = (vault, usageModule) => {
+module.exports = async (vault, usageModule) => {
   switch (usageModule) {
     case 'aws':
-      aws.getAwsKey(vault);
+      await aws.getAwsKey(vault);
       break;
     case 'kv':
       core.warning('Feature is not available.');
@@ -13,7 +13,7 @@ module.exports = (vault, usageModule) => {
       core.warning('Feature is not available.');
       break;
     default:
-      core.error('Function is invalid');
-      break;
+      core.setFailed('Module variable is invalid');
+      throw new Error('Module variable is invalid');
   }
 };

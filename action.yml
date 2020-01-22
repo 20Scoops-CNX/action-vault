@@ -4,18 +4,18 @@ branding:
   icon: 'toggle-right'
   color: 'red'
 inputs:
-  url:
+  VAULT_HOST:
     description:
       'vault server url path example: http://vault-server.com'
     required: true
-  token:
+  VAULT_TOKEN:
     description:
       'vault token for verify and get secrets'
     required: true
-  path:
+  PATH:
     description: 'vault secret path example: aws/secret'
     required: true
-  module:
+  MODULE:
     description: 'vault secret module aws, kv, ssh'
     required: true
 runs:

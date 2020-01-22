@@ -1,14 +1,15 @@
 const core = require('@actions/core');
-const readPath = core.getInput('PATH');
 
-const getAwsKey = vault => {
-  vault
-    .read(readPath)
-    .then(data => {
-      core.exportVariable('AWS_ACCESS_KEY', data.access_key);
-      core.exportVariable('AWS_SECRET_KEY', data.secret_key);
-    })
-    .catch(err => core.error(`Error ${err}`));
+const getAwsKey = async vault => {
+  const readPath = core.getInput('PATH', { required: true });
+  try {
+    const credential = await vault.read(readPath);
+    core.exportVariable('AWS_ACCESS_KEY', credential.data.access_key);
+    core.exportVariable('AWS_SECRET_KEY', credential.data.secret_key);
+  } catch (err) {
+    core.setFailed(err.message);
+    throw err;
+  }
 };
 
 module.exports = {

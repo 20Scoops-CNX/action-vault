@@ -1,12 +1,19 @@
 const core = require('@actions/core');
 
-const url = core.getInput('VAULT_HOST');
-const token = core.getInput('VAULT_TOKEN');
+/**
+ * Vault host url path http://vault-server.com
+ */
+const url = core.getInput('VAULT_HOST', { required: true });
 
 /**
- * aws,kv,ssh
+ * Vault token s.HnKx12u6rYFFIRMotZ4kOExu
  */
-const usageModule = core.getInput('MODULE');
+const token = core.getInput('VAULT_TOKEN', { required: true });
+
+/**
+ * Vault module usage aws,kv,ssh
+ */
+const usageModule = core.getInput('MODULE', { required: true });
 
 const modules = require('./modules');
 
