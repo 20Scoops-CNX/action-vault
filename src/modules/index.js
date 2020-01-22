@@ -4,7 +4,7 @@ const aws = require('./aws');
 module.exports = (vault, usageModule) => {
   switch (usageModule) {
     case 'aws':
-      aws.getAwsKey();
+      aws.getAwsKey(vault);
       break;
     case 'kv':
       core.warning('Feature is not available.');
