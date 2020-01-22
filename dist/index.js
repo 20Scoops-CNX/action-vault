@@ -172,16 +172,17 @@ module.exports = function generate_comment(it, $keyword, $ruleType) {
 /***/ (function(module, __unusedexports, __webpack_require__) {
 
 const core = __webpack_require__(470);
-const readPath = core.getInput('PATH');
 
-const getAwsKey = vault => {
-  vault
-    .read(readPath)
-    .then(data => {
-      core.exportVariable('AWS_ACCESS_KEY', data.access_key);
-      core.exportVariable('AWS_SECRET_KEY', data.secret_key);
-    })
-    .catch(err => core.error(`Error ${err}`));
+const getAwsKey = async vault => {
+  const readPath = core.getInput('PATH', { required: true });
+  try {
+    const credential = await vault.read(readPath);
+    core.exportVariable('AWS_ACCESS_KEY', credential.data.access_key);
+    core.exportVariable('AWS_SECRET_KEY', credential.data.secret_key);
+  } catch (err) {
+    core.setFailed(err.message);
+    throw err;
+  }
 };
 
 module.exports = {
@@ -9245,23 +9246,32 @@ exports.debug = debug // for test
 "use strict";
 
 const os = __webpack_require__(87);
+const tty = __webpack_require__(867);
 const hasFlag = __webpack_require__(364);
 
-const env = process.env;
+const {env} = process;
 
 let forceColor;
 if (hasFlag('no-color') ||
 	hasFlag('no-colors') ||
-	hasFlag('color=false')) {
-	forceColor = false;
+	hasFlag('color=false') ||
+	hasFlag('color=never')) {
+	forceColor = 0;
 } else if (hasFlag('color') ||
 	hasFlag('colors') ||
 	hasFlag('color=true') ||
 	hasFlag('color=always')) {
-	forceColor = true;
+	forceColor = 1;
 }
+
 if ('FORCE_COLOR' in env) {
-	forceColor = env.FORCE_COLOR.length === 0 || parseInt(env.FORCE_COLOR, 10) !== 0;
+	if (env.FORCE_COLOR === 'true') {
+		forceColor = 1;
+	} else if (env.FORCE_COLOR === 'false') {
+		forceColor = 0;
+	} else {
+		forceColor = env.FORCE_COLOR.length === 0 ? 1 : Math.min(parseInt(env.FORCE_COLOR, 10), 3);
+	}
 }
 
 function translateLevel(level) {
@@ -9277,8 +9287,8 @@ function translateLevel(level) {
 	};
 }
 
-function supportsColor(stream) {
-	if (forceColor === false) {
+function supportsColor(haveStream, streamIsTTY) {
+	if (forceColor === 0) {
 		return 0;
 	}
 
@@ -9292,22 +9302,21 @@ function supportsColor(stream) {
 		return 2;
 	}
 
-	if (stream && !stream.isTTY && forceColor !== true) {
+	if (haveStream && !streamIsTTY && forceColor === undefined) {
 		return 0;
 	}
 
-	const min = forceColor ? 1 : 0;
+	const min = forceColor || 0;
+
+	if (env.TERM === 'dumb') {
+		return min;
+	}
 
 	if (process.platform === 'win32') {
-		// Node.js 7.5.0 is the first version of Node.js to include a patch to
-		// libuv that enables 256 color output on Windows. Anything earlier and it
-		// won't work. However, here we target Node.js 8 at minimum as it is an LTS
-		// release, and Node.js 7 is not. Windows 10 build 10586 is the first Windows
-		// release that supports 256 colors. Windows 10 build 14931 is the first release
-		// that supports 16m/TrueColor.
+		// Windows 10 build 10586 is the first Windows release that supports 256 colors.
+		// Windows 10 build 14931 is the first release that supports 16m/TrueColor.
 		const osRelease = os.release().split('.');
 		if (
-			Number(process.versions.node.split('.')[0]) >= 8 &&
 			Number(osRelease[0]) >= 10 &&
 			Number(osRelease[2]) >= 10586
 		) {
@@ -9327,6 +9336,10 @@ function supportsColor(stream) {
 
 	if ('TEAMCITY_VERSION' in env) {
 		return /^(9\.(0*[1-9]\d*)\.|\d{2,}\.)/.test(env.TEAMCITY_VERSION) ? 1 : 0;
+	}
+
+	if ('GITHUB_ACTIONS' in env) {
+		return 1;
 	}
 
 	if (env.COLORTERM === 'truecolor') {
@@ -9357,22 +9370,18 @@ function supportsColor(stream) {
 		return 1;
 	}
 
-	if (env.TERM === 'dumb') {
-		return min;
-	}
-
 	return min;
 }
 
 function getSupportLevel(stream) {
-	const level = supportsColor(stream);
+	const level = supportsColor(stream, stream && stream.isTTY);
 	return translateLevel(level);
 }
 
 module.exports = {
 	supportsColor: getSupportLevel,
-	stdout: getSupportLevel(process.stdout),
-	stderr: getSupportLevel(process.stderr)
+	stdout: translateLevel(supportsColor(true, tty.isatty(1))),
+	stderr: translateLevel(supportsColor(true, tty.isatty(2)))
 };
 
 
@@ -15404,12 +15413,12 @@ Signer.prototype.sign = function () {
 
 "use strict";
 
-module.exports = (flag, argv) => {
-	argv = argv || process.argv;
+
+module.exports = (flag, argv = process.argv) => {
 	const prefix = flag.startsWith('-') ? '' : (flag.length === 1 ? '-' : '--');
-	const pos = argv.indexOf(prefix + flag);
-	const terminatorPos = argv.indexOf('--');
-	return pos !== -1 && (terminatorPos === -1 ? true : pos < terminatorPos);
+	const position = argv.indexOf(prefix + flag);
+	const terminatorPosition = argv.indexOf('--');
+	return position !== -1 && (terminatorPosition === -1 || position < terminatorPosition);
 };
 
 
@@ -26582,13 +26591,20 @@ module.exports = function generate_not(it, $keyword, $ruleType) {
 
 const core = __webpack_require__(470);
 
-const url = core.getInput('VAULT_HOST');
-const token = core.getInput('VAULT_TOKEN');
+/**
+ * Vault host url path http://vault-server.com
+ */
+const url = core.getInput('VAULT_HOST', { required: true });
 
 /**
- * aws,kv,ssh
+ * Vault token s.HnKx12u6rYFFIRMotZ4kOExu
  */
-const usageModule = core.getInput('MODULE');
+const token = core.getInput('VAULT_TOKEN', { required: true });
+
+/**
+ * Vault module usage aws,kv,ssh
+ */
+const usageModule = core.getInput('MODULE', { required: true });
 
 const modules = __webpack_require__(892);
 
@@ -37005,10 +37021,10 @@ function compileAsync(schema, meta, callback) {
 const core = __webpack_require__(470);
 const aws = __webpack_require__(33);
 
-module.exports = (vault, usageModule) => {
+module.exports = async (vault, usageModule) => {
   switch (usageModule) {
     case 'aws':
-      aws.getAwsKey(vault);
+      await aws.getAwsKey(vault);
       break;
     case 'kv':
       core.warning('Feature is not available.');
@@ -37017,8 +37033,8 @@ module.exports = (vault, usageModule) => {
       core.warning('Feature is not available.');
       break;
     default:
-      core.error('Function is invalid');
-      break;
+      core.setFailed('Module variable is invalid');
+      throw new Error('Module variable is invalid');
   }
 };
 
