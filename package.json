@@ -15,7 +15,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-push": "yarn test && node_modules/.bin/jest-badges-readme && git commit -am 'README.md'"
+      "pre-commit": "yarn test && node_modules/.bin/jest-badges-readme && git add README.md"
     }
   },
   "author": "",
