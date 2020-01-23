@@ -31,8 +31,8 @@ jobs:
               id: ecr
               uses: jwalton/gh-ecr-login@v1
               with:
-                access-key-id: ${{ steps.aws.AWS_ACCESS_KEY }}
-                secret-access-key: ${{ steps.aws.AWS_SECRET_KEY }}
+                access-key-id: ${{ env.AWS_ACCESS_KEY }}
+                secret-access-key: ${{ env.AWS_SECRET_KEY }}
                 region: ${REGION}
             
 ```
