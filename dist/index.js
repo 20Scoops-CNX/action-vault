@@ -37020,6 +37020,7 @@ function compileAsync(schema, meta, callback) {
 
 const core = __webpack_require__(470);
 const aws = __webpack_require__(33);
+const keyValue = __webpack_require__(906);
 
 module.exports = async (vault, usageModule) => {
   switch (usageModule) {
@@ -37027,7 +37028,7 @@ module.exports = async (vault, usageModule) => {
       await aws.getAwsKey(vault);
       break;
     case 'kv':
-      core.warning('Feature is not available.');
+      await keyValue.getValueFromKey(vault);
       break;
     case 'ssh':
       core.warning('Feature is not available.');
@@ -37803,7 +37804,30 @@ module.exports = require("zlib");
 /***/ }),
 /* 904 */,
 /* 905 */,
-/* 906 */,
+/* 906 */
+/***/ (function(module, __unusedexports, __webpack_require__) {
+
+const core = __webpack_require__(470);
+
+const getValueFromKey = async vault => {
+  const readPath = core.getInput('PATH', { required: true });
+  try {
+    const { data } = await vault.read(readPath);
+    Object.keys(data).forEach(key => {
+      core.exportVariable(key, data[String(key)]);
+    });
+  } catch (err) {
+    core.setFailed(err.message);
+    throw err;
+  }
+};
+
+module.exports = {
+  getValueFromKey
+};
+
+
+/***/ }),
 /* 907 */,
 /* 908 */,
 /* 909 */
