@@ -1,14 +1,14 @@
 # 20scoops Action Vault
 
-| Statements | Branches | Functions | Lines |
-| -----------|----------|-----------|-------|
+| Statements                                    | Branches                                  | Functions                                   | Lines                               |
+| --------------------------------------------- | ----------------------------------------- | ------------------------------------------- | ----------------------------------- |
 | ![Statements](#statements# "Make me better!") | ![Branches](#branches# "Make me better!") | ![Functions](#functions# "Make me better!") | ![Lines](#lines# "Make me better!") |
 
 
 ## Feature available
  - [x] aws access key
  - [x] KV key value
- - [ ] SSH private key
+ - [x] SSH private key
 
 Usage
 ---
@@ -61,5 +61,24 @@ jobs:
                 PATH: 'my-project/DEVELOP'
                 MODULE: 'kv'
               id: my-secret
+```
+
+### SSH vault Signed SSH Certificates
+**Note**: How to and Concept of this module https://www.vaultproject.io/docs/secrets/ssh/signed-ssh-certificates
+
+signed ssh certificates is how you do ssh to server from client side (CI) and excute the `shell` command to do something on server with this will need your current id_rsa and id_ras-cert.pub to verify host and get authorized and excution.
+
+```yml
+jobs:
+    build:
+        steps:
+            - name: Show something on server
+              uses: 20Scoops-CNX/action-vault@master
+              with:
+                VAULT_HOST: ${{ secrets.VAULT_HOST }}
+                VAULT_TOKEN: ${{ secrets.VAULT_TOKEN }}
+                PATH: 'my-ssh/sign/user'
+                MODULE: 'ssh',
+                COMMAND: 'ls -la'
 ```
 
