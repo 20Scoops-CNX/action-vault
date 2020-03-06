@@ -23,7 +23,9 @@
   "license": "ISC",
   "dependencies": {
     "@actions/core": "^1.2.1",
-    "node-vault": "^0.9.12"
+    "@actions/exec": "^1.0.3",
+    "node-vault": "^0.9.12",
+    "ssh2": "^0.8.8"
   },
   "devDependencies": {
     "@olavoparno/jest-badges-readme": "^1.4.0",

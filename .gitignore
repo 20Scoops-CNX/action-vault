@@ -9,6 +9,7 @@ yarn-error.log
 # test
 coverage
 artifacts
+test-cert.pub
 
 # development workflow 
 .bundle
