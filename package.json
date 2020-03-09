@@ -1,17 +1,18 @@
 {
   "name": "action-vault",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "",
   "main": "src/index.js",
   "scripts": {
     "build": "ncc build src/index.js",
     "lint": "eslint . --fix",
     "lint:check": "eslint . --color",
-    "prettier": "prettier --write '**/*.js'",
-    "prettier:check": "prettier --list-different '**/*.js'",
+    "prettier": "prettier --write 'src/**/*.js'",
+    "prettier:check": "prettier --list-different 'src/**/*.js'",
     "check-vulnerabilities": "yarn retire --outputformat json --outputpath artifacts/result-vulnerabilities.json",
     "test:watch": "jest --watch --detectOpenHandles",
-    "test": "jest --coverage"
+    "test": "jest --coverage",
+    "make:badges": "node_modules/.bin/jest-badges-readme"
   },
   "husky": {
     "hooks": {
