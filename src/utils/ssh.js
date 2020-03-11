@@ -2,7 +2,7 @@ const Client = require('ssh2').Client;
 const fs = require('fs');
 const homedir = require('os').homedir();
 
-const sshCommand = command => {
+const sshCommand = ({ command, ipAddress, port, username }) => {
   const ppk = fs.readFileSync(`${homedir}/.ssh/id_rsa`);
   const pub = fs.readFileSync(`${homedir}/.ssh/id_rsa-cert.pub`);
   return new Promise((resolve, reject) => {
@@ -23,9 +23,9 @@ const sshCommand = command => {
         });
       })
       .connect({
-        host: '18.194.240.181',
-        port: 22,
-        username: 'centos',
+        host: ipAddress,
+        port,
+        username,
         privateKey: ppk,
         publicKey: pub,
         tryKeyboard: true

@@ -2,7 +2,7 @@
 
 | Statements                                    | Branches                                  | Functions                                   | Lines                               |
 | --------------------------------------------- | ----------------------------------------- | ------------------------------------------- | ----------------------------------- |
-| ![Statements](https://img.shields.io/badge/Coverage-79.22%25-red.svg "Make me better!") | ![Branches](https://img.shields.io/badge/Coverage-62.5%25-red.svg "Make me better!") | ![Functions](https://img.shields.io/badge/Coverage-50%25-red.svg "Make me better!") | ![Lines](https://img.shields.io/badge/Coverage-80.26%25-yellow.svg "Make me better!") |
+| ![Statements](https://img.shields.io/badge/Coverage-80%25-yellow.svg "Make me better!") | ![Branches](https://img.shields.io/badge/Coverage-62.5%25-red.svg "Make me better!") | ![Functions](https://img.shields.io/badge/Coverage-50%25-red.svg "Make me better!") | ![Lines](https://img.shields.io/badge/Coverage-81.01%25-yellow.svg "Make me better!") |
 
 
 ## Feature available
@@ -78,7 +78,10 @@ jobs:
                 VAULT_HOST: ${{ secrets.VAULT_HOST }}
                 VAULT_TOKEN: ${{ secrets.VAULT_TOKEN }}
                 PATH: 'my-ssh/sign/user'
-                MODULE: 'ssh',
+                MODULE: 'ssh'
+                IP_ADDRESS: '127.0.0.1' // or ${{ env.ip_address }}
+                PORT: 22 // or ${{ env.port }} default is `22`
+                USERNAME: 'ubuntu' // or ${{ env.username }}
                 COMMAND: 'ls -la'
 ```
 

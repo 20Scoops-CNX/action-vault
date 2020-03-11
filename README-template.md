@@ -78,7 +78,10 @@ jobs:
                 VAULT_HOST: ${{ secrets.VAULT_HOST }}
                 VAULT_TOKEN: ${{ secrets.VAULT_TOKEN }}
                 PATH: 'my-ssh/sign/user'
-                MODULE: 'ssh',
+                MODULE: 'ssh'
+                IP_ADDRESS: '127.0.0.1' // or ${{ env.ip_address }}
+                PORT: 22 // or ${{ env.port }} default is `22`
+                USERNAME: 'ubuntu' // or ${{ env.username }}
                 COMMAND: 'ls -la'
 ```
 
