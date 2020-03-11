@@ -7,6 +7,9 @@ const sshUtils = require('../utils/ssh');
 const setCommandFromSSH = async vault => {
   const readPath = core.getInput('PATH', { required: true });
   const command = core.getInput('COMMAND', { required: true });
+  const ipAddress = core.getInput('IP_ADDRESS', { required: true });
+  const port = core.getInput('PORT', { default: 22 });
+  const username = core.getInput('USERNAME', { required: true });
   try {
     const contents = fs.readFileSync(`${homedir}/.ssh/id_rsa.pub`, 'utf8');
     const { data } = await vault.write(readPath, {
@@ -18,7 +21,7 @@ const setCommandFromSSH = async vault => {
       fs.writeFileSync(`${__dirname}/../../test-cert.pub`, data.signed_key);
     }
 
-    await sshUtils.sshCommand(command);
+    await sshUtils.sshCommand({ command, ipAddress, port, username });
   } catch (err) {
     core.setFailed(err.message);
     throw err;
